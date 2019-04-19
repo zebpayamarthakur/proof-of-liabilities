@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Proof of Liabilities tools</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/lumen/bootstrap.min.css">
+    <link rel="stylesheet" href="http://syskall.com/proof-of-liabilities/js/highlight/styles/vs.css">
+    <link rel="stylesheet" href="http://syskall.com/proof-of-liabilities/css/style.css">
+    <link rel="stylesheet" href="http://syskall.com/proof-of-liabilities/css/svg.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  <!--
+    <a href="https://github.com/olalonde/proof-of-liabilities">
+    <img style="position: absolute; top: 0; left: 0; border: 0;z-index:2000" 
+      src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"></a>
+  -->
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Proof of Liabilities Tools</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#generate">Generate</a></li>
+            <li><a href="#verify">Verify</a></li>
+            <li><a href="#prettify">Prettify</a></li>
+            <li><a href="#what">What is this?</a></li>
+          </ul>
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://olalonde.github.io/proof-of-assets">Proof of Assets</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="tab-content">
+        <div class="tab-pane active" id="generate">
+          <div class="alert alert-danger flash" style="display:none">
+            <h4></h4>
+            <p></p>
+          </div>
+
+          <form action="#" class="form-horizontal" method="get">
+            <fieldset>
+              <legend>Generate</legend>
+              <div class="form-group">
+                <label class="col-lg-2 control-label" for="accounts">Accounts
+                  <p class="help-block">Set the nonce property on accounts to trigger deterministic mode.</p>
+                </label>
+                <div class="col-lg-10 controls">
+                  <textarea class="form-control" id="accounts" rows="9" title="Accounts"></textarea>
+                  <br>
+                  <div>
+                    <button id="btn_generate" class="btn btn-primary">Generate</button>
+
+                    <div class="btn-group" data-toggle="buttons">
+                      <label class="btn btn-default active">
+                        <input name="format" type="radio" value="d3"> Graph
+                      </label> 
+                      <label class="btn btn-default">
+                        <input name="format" type="radio" value="pretty"> Pretty
+                      </label> 
+                      <label class="btn btn-default">
+                        <input name="format" type="radio" value="json"> JSON
+                      </label>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" id="generate-share">Share</a>
+
+                </div>
+                </div>
+              </div>
+
+            </fieldset>
+
+            <fieldset id="generate_results" style="display:none">
+              <legend>Results</legend>
+                <div class="form-group">
+                  <label class="col-lg-2 control-label" for="root">Root</label>
+                  <div class="col-lg-10 controls">
+                    <pre id="root"></pre>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-2 control-label">Partial tree for <select id="select_account"></select></label>
+                  <div class="col-lg-10 controls">
+                    <pre class="json" id="partial_tree_for"></pre>
+                    <pre class="pretty" id="partial_tree_for_pretty"></pre>
+                    <pre class="d3" id="partial_tree_for_d3"></pre>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-2 control-label">Complete tree (for debugging)</label>
+                  <div class="col-lg-10 controls">
+                    <pre class="json" id="complete_tree"></pre>
+                    <pre class="pretty" id="complete_tree_pretty"></pre>
+                    <pre class="d3" id="complete_tree_d3"></pre>
+                  </div>
+                </div>
+            </fieldset>
+
+          </form>
+        </div>
+        <div class="tab-pane" id="verify">
+          <div class="alert alert-danger flash" style="display:none">
+            <h4></h4>
+            <p></p>
+          </div>
+
+          <form action="/" class="form-horizontal" method="get">
+            <fieldset>
+              <legend>Verify</legend>
+              <div class="form-group">
+                <label class="col-lg-2 control-label" for="partial_tree">Partial tree</label>
+                <div class="col-lg-10 controls">
+                  <textarea class="form-control" id="partial_tree" rows="12"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label" for="expected_root">Expected root</label>
+                <div class="col-lg-10 controls">
+                  <textarea class="form-control" id="expected_root" rows="2"></textarea>
+                  <br>
+                  <button id="btn_verify" class="btn btn-primary">Verify</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <a href="#verify" id="verify-share">Share</a>
+                </div>
+
+              </div>
+            </fieldset>
+            <fieldset id="verify_results" style="display:none">
+              <legend>Result</legend>
+              <p id="verification" class="alert"></p>
+            </fieldset>
+          </form>
+        </div>
+        <div class="tab-pane" id="prettify">
+          <div class="alert alert-danger flash" style="display:none">
+            <h4></h4>
+            <p></p>
+          </div>
+
+          <form action="/" class="form-horizontal" method="get">
+            <fieldset>
+              <legend>Prettify ugly JSON</legend>
+              <div class="form-group">
+                <label class="col-lg-2 control-label" for="ugly_json">Ugly JSON</label>
+                <div class="col-lg-10 controls">
+                  <textarea class="form-control" id="ugly_json" rows="3"></textarea>
+                  <br>
+                  <button id="btn_prettify" class="btn btn-primary">Prettify</button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Prettyfication result</legend>
+              <pre id="pretty_d3" style="display:none"></pre>
+              <pre id="pretty_tree" style="display:none"></pre>
+              <pre id="pretty_json"></pre>
+            </fieldset>
+          </form>
+        </div>
+        <div class="tab-pane" id="what">
+          <h1>Proof of Liabilities</h1>
+          <h2>Introduction</h2>
+          <p>Proof of Liabilities (PoL) is a scheme designed to let companies that accept monetary deposits from consumers (e.g. Bitcoin exchanges, gambling websites, online Bitcoin wallets, etc.) prove their total amount of deposits (their liabilities) without compromising the privacy of individual users.</p>
+          <p>The code powering this site is available on this Github repository:
+            <a href="https://github.com/olalonde/proof-of-liabilities">olalonde/proof-of-liabilities</a>
+          </p>
+          <h2>How does it work?</h2>
+          <p>
+            Sites that implement the scheme provide a public root.json file which contains the total amount of liabilites and a hash. They also provide
+            a partialtree.json file to individual users which contains the user's amount and can be used to compute the total liabilities amount and root hash. 
+            If those computed values match those in the public root.json file,
+            it means that the user was included in the proof. To make sure a site is solvent, a user must verify that he was included in the proof
+            and verify that the site's wallet address has enough funds to cover the total liabilities amount.
+          </p>
+          <p>For a more in depth explanation, see the links section below.</p>
+
+          <h2>Exchanges</h2>
+          <ul>
+            <li><a href="http://vaultofsatoshi.com">Vault of Satoshi</a></li>
+            <li><a href="http://peat.io">Peat.io</a></li>
+          </ul>
+          <h2>Implementations</h2>
+          <ul>
+            <li>Javascript: <a href="#install">olalonde/proof-of-liabilities</a>
+            </li>
+            <li>Clojure: <a href="https://github.com/zw/PoLtree/">zw/PoLtree</a>
+            </li>
+            <li>Ruby: <a href="https://github.com/peatio/liability-proof">peatio/liability-proof</a>
+            </li>
+            <li>Python: <a href="https://github.com/ConceptPending/proveit">ConceptPending/proveit</a>
+            </li>
+          </ul>
+          <h2>Links</h2>
+          <ul>
+            <li><a href="https://github.com/olalonde/proof-of-liabilities/blob/master/README.md#specification">Specification</a></li>
+            <li><a href="https://iwilcox.me.uk/2014/proving-bitcoin-reserves">Proving bitcoin reserves</a> (by Zak Wilcox)</li>
+          </ul>
+
+        </div>
+      </div>
+
+      <hr>
+      <footer>
+        <p>
+          Built with <span class="glyphicon glyphicon-heart"></span> by <a href="http://www.syskall.com">Olivier Lalonde</a>
+          <span class="pull-right">Powered by <a href="http://pages.github.com">Github Pages</a> &amp; <a href="https://github.com/olalonde/proof-of-liabilities">Github Repository</a></span>
+        </p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="build/lproof.js"></script>
+    <script src="http://syskall.com/proof-of-liabilities/bower_components/d3/d3.min.js"></script>
+    <script src="http://syskall.com/proof-of-liabilities/js/highlight/highlight.pack.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-12888988-2', 'syskall.com');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>
